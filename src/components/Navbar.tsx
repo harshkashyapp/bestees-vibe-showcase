@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
-import { ShoppingBag, Heart, Menu, X } from "lucide-react";
+import { ShoppingBag, Heart, Menu, X, ArrowLeft } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
 const navLinks = [
   { label: "Shop", path: "/shop" },
-  { label: "Collections", path: "/shop?category=new-drops" },
+  { label: "Collections", path: "/collections" },
   { label: "About", path: "/about" },
 ];
+
+// Pages that have a dark fullscreen hero where navbar should start transparent with light text
+const darkHeroPages = ["/", "/about"];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +22,10 @@ const Navbar = () => {
   const { wishlist } = useWishlist();
   const location = useLocation();
   const { scrollY } = useScroll();
+
+  const hasDarkHero = darkHeroPages.includes(location.pathname);
+  // On pages without a dark hero, always use dark text (as if scrolled)
+  const useDarkText = !hasDarkHero || scrolled;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -34,20 +41,26 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location]);
 
+  const isActive = (path: string) => {
+    if (path === "/shop") return location.pathname === "/shop" && !location.search;
+    if (path === "/collections") return location.pathname === "/collections" || (location.pathname === "/shop" && !!location.search);
+    return location.pathname === path;
+  };
+
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: hidden && !isOpen ? -100 : 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
-        scrolled ? "bg-background/95 backdrop-blur-lg border-b border-border" : "bg-transparent"
+        useDarkText ? "bg-background/95 backdrop-blur-lg border-b border-border" : "bg-transparent"
       }`}
     >
       <div className="flex items-center justify-between px-6 md:px-16 py-5">
         {/* Mobile menu toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-foreground"
+          className={`md:hidden transition-colors duration-300 ${useDarkText ? "text-foreground" : "text-primary-foreground"}`}
           aria-label="Toggle menu"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
@@ -60,9 +73,9 @@ const Navbar = () => {
               key={link.path}
               to={link.path}
               className={`font-body text-[11px] uppercase tracking-[0.2em] font-medium transition-colors duration-300 ${
-                location.pathname === link.path
-                  ? (scrolled ? "text-foreground" : "text-primary-foreground")
-                  : (scrolled ? "text-muted-foreground hover:text-foreground" : "text-primary-foreground/60 hover:text-primary-foreground")
+                isActive(link.path)
+                  ? (useDarkText ? "text-foreground" : "text-primary-foreground")
+                  : (useDarkText ? "text-muted-foreground hover:text-foreground" : "text-primary-foreground/60 hover:text-primary-foreground")
               }`}
             >
               {link.label}
@@ -74,7 +87,7 @@ const Navbar = () => {
         <Link
           to="/"
           className={`absolute left-1/2 -translate-x-1/2 font-display text-2xl md:text-3xl uppercase tracking-wider transition-colors duration-300 ${
-            scrolled ? "text-foreground" : "text-primary-foreground"
+            useDarkText ? "text-foreground" : "text-primary-foreground"
           }`}
         >
           Bestees
@@ -85,7 +98,7 @@ const Navbar = () => {
           <Link
             to="/shop"
             className={`relative transition-colors duration-300 ${
-              scrolled ? "text-foreground" : "text-primary-foreground"
+              useDarkText ? "text-foreground" : "text-primary-foreground"
             }`}
           >
             <Heart size={18} strokeWidth={1.5} fill={wishlist.length > 0 ? "currentColor" : "none"} />
@@ -98,7 +111,7 @@ const Navbar = () => {
           <Link
             to="/cart"
             className={`relative transition-colors duration-300 ${
-              scrolled ? "text-foreground" : "text-primary-foreground"
+              useDarkText ? "text-foreground" : "text-primary-foreground"
             }`}
           >
             <ShoppingBag size={18} strokeWidth={1.5} />
