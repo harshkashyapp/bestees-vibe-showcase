@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,29 +6,29 @@
 
 @layer base {
   :root {
-    --background: 40 20% 97%;
-    --foreground: 0 0% 8%;
-    --card: 40 15% 95%;
-    --card-foreground: 0 0% 8%;
-    --popover: 40 20% 97%;
-    --popover-foreground: 0 0% 8%;
-    --primary: 0 0% 8%;
-    --primary-foreground: 40 20% 97%;
-    --secondary: 35 30% 90%;
-    --secondary-foreground: 0 0% 8%;
-    --muted: 35 15% 92%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 30 35% 78%;
-    --accent-foreground: 0 0% 8%;
+    --background: 40 15% 96%;
+    --foreground: 0 0% 5%;
+    --card: 40 10% 93%;
+    --card-foreground: 0 0% 5%;
+    --popover: 40 15% 96%;
+    --popover-foreground: 0 0% 5%;
+    --primary: 0 0% 5%;
+    --primary-foreground: 40 15% 96%;
+    --secondary: 33 25% 88%;
+    --secondary-foreground: 0 0% 5%;
+    --muted: 33 10% 90%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 30 30% 72%;
+    --accent-foreground: 0 0% 5%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 35 20% 88%;
-    --input: 35 20% 88%;
-    --ring: 0 0% 8%;
-    --radius: 0.5rem;
+    --border: 33 15% 85%;
+    --input: 33 15% 85%;
+    --ring: 0 0% 5%;
+    --radius: 0rem;
 
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Outfit', sans-serif;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -41,25 +41,25 @@
   }
 
   .dark {
-    --background: 0 0% 6%;
-    --foreground: 40 20% 95%;
-    --card: 0 0% 10%;
-    --card-foreground: 40 20% 95%;
-    --popover: 0 0% 8%;
-    --popover-foreground: 40 20% 95%;
-    --primary: 40 20% 95%;
-    --primary-foreground: 0 0% 8%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 40 20% 95%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 30 25% 35%;
-    --accent-foreground: 40 20% 95%;
+    --background: 0 0% 4%;
+    --foreground: 40 15% 94%;
+    --card: 0 0% 8%;
+    --card-foreground: 40 15% 94%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 40 15% 94%;
+    --primary: 40 15% 94%;
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 40 15% 94%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 30 20% 30%;
+    --accent-foreground: 40 15% 94%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
-    --input: 0 0% 18%;
-    --ring: 40 20% 95%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 40 15% 94%;
   }
 }
 
@@ -70,22 +70,34 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+  }
+
+  ::selection {
+    background: hsl(var(--foreground));
+    color: hsl(var(--primary-foreground));
   }
 }
 
 @layer components {
   .brand-heading {
     font-family: var(--font-display);
-    @apply font-extrabold uppercase tracking-tight;
+    @apply font-normal uppercase tracking-wide;
+    letter-spacing: 0.04em;
   }
   .section-padding {
-    @apply px-6 py-16 md:px-12 lg:px-20 lg:py-24;
+    @apply px-6 py-20 md:px-16 lg:px-24 lg:py-28;
   }
   .product-card-hover {
-    @apply transition-all duration-500 ease-out;
+    @apply transition-all duration-700 ease-out;
+  }
+  .editorial-label {
+    font-family: var(--font-body);
+    @apply text-[11px] uppercase tracking-[0.25em] text-muted-foreground font-medium;
   }
 }
 
