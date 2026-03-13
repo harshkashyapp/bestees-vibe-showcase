@@ -18,7 +18,7 @@ const HeroSection = () => {
       transition: {
         duration: 1,
         delay: 0.8 + i * 0.05,
-        ease: [0.22, 1, 0.36, 1],
+        ease: [0.22, 1, 0.36, 1] as const,
       },
     }),
   };
