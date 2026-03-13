@@ -11,35 +11,40 @@ const images = [lifestyle1, productHoodieBeige, lifestyle2, productTshirtBlack, 
 
 const InstagramGallery = () => {
   return (
-    <section className="section-padding">
+    <section className="py-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-8"
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="text-center mb-12 px-6"
       >
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Instagram size={20} />
-          <span className="font-body text-sm text-muted-foreground">@bestees</span>
-        </div>
-        <h2 className="brand-heading text-3xl md:text-4xl">Follow the Vibe</h2>
+        <p className="editorial-label mb-3">@bestees</p>
+        <h2 className="font-display text-5xl md:text-7xl uppercase tracking-wide">Follow the Vibe</h2>
       </motion.div>
 
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-1">
+      <div className="grid grid-cols-3 md:grid-cols-6">
         {images.map((img, i) => (
           <motion.a
             key={i}
             href="#"
             className="relative aspect-square overflow-hidden group"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: i * 0.05 }}
+            transition={{ duration: 0.6, delay: i * 0.08 }}
           >
-            <img src={img} alt="Instagram" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-            <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/30 transition-colors duration-300 flex items-center justify-center">
-              <Instagram className="text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300" size={24} />
+            <img
+              src={img}
+              alt={`Instagram post ${i + 1}`}
+              className="w-full h-full object-cover transition-transform duration-[1s] ease-out group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/40 transition-all duration-500 flex items-center justify-center">
+              <Instagram
+                className="text-primary-foreground opacity-0 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-100"
+                size={22}
+                strokeWidth={1.5}
+              />
             </div>
           </motion.a>
         ))}
