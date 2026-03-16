@@ -1,11 +1,13 @@
 import { useState, useMemo } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { SlidersHorizontal, Grid3X3, LayoutGrid, ArrowUpRight } from "lucide-react";
+import { SlidersHorizontal, Grid3X3, LayoutGrid } from "lucide-react";
 import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import PageHeader from "@/components/PageHeader";
+import PageTransition from "@/components/PageTransition";
 
 const categories = ["All", "T-Shirts", "Hoodies", "Oversized", "New Drops"];
 
@@ -26,35 +28,18 @@ const Shop = () => {
   }, [activeCategory]);
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <PageTransition>
+      <div className="min-h-screen">
+        <Navbar />
 
-      {/* Page header */}
-      <div className="pt-28 pb-8 section-padding border-b border-border">
-        <div className="flex items-center gap-2 mb-6">
-          <Link to="/" className="font-body text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <span className="text-muted-foreground text-[11px]">/</span>
-          <span className="font-body text-[11px] uppercase tracking-[0.2em] text-foreground">
-            Shop
-          </span>
-        </div>
-        <div className="flex items-end justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h1 className="font-display text-6xl md:text-8xl uppercase tracking-wide">
-              {activeCategory === "All" ? "All Products" : activeCategory}
-            </h1>
-            <p className="font-body text-sm text-muted-foreground mt-2">
-              {filtered.length} {filtered.length === 1 ? "product" : "products"}
-            </p>
-          </motion.div>
-
-          {/* Grid toggle (desktop) */}
+        <PageHeader
+          title={activeCategory === "All" ? "Shop" : activeCategory}
+          subtitle={`${filtered.length} ${filtered.length === 1 ? "product" : "products"}`}
+          breadcrumbs={[
+            { label: "Home", path: "/" },
+            { label: "Shop" },
+          ]}
+        >
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={() => setGridCols(3)}
@@ -71,68 +56,75 @@ const Shop = () => {
               <LayoutGrid size={18} />
             </button>
           </div>
-        </div>
-      </div>
+        </PageHeader>
 
-      {/* Filters bar */}
-      <div className="section-padding !py-0">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex items-center gap-3 py-6 border-b border-border overflow-x-auto scrollbar-hide"
-        >
-          <SlidersHorizontal size={14} className="text-muted-foreground flex-shrink-0" />
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`font-body text-[11px] uppercase tracking-[0.15em] font-medium px-5 py-2.5 border whitespace-nowrap transition-all duration-300 ${
-                activeCategory === cat
-                  ? "bg-foreground text-primary-foreground border-foreground"
-                  : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </motion.div>
-      </div>
-
-      {/* Product Grid */}
-      <div className="section-padding !pt-10">
-        <AnimatePresence mode="wait">
+        {/* Filters bar */}
+        <div className="section-padding !py-0">
           <motion.div
-            key={activeCategory}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`grid grid-cols-2 gap-4 md:gap-6 ${
-              gridCols === 3 ? "md:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
-            }`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center gap-3 py-6 border-b border-border overflow-x-auto scrollbar-hide"
           >
-            {filtered.map((product, i) => (
-              <ProductCard key={product.id} product={product} index={i} />
+            <SlidersHorizontal size={14} className="text-muted-foreground flex-shrink-0" />
+            {categories.map((cat, i) => (
+              <motion.button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + i * 0.05 }}
+                className={`font-body text-[11px] uppercase tracking-[0.15em] font-medium px-5 py-2.5 border whitespace-nowrap transition-all duration-300 ${
+                  activeCategory === cat
+                    ? "bg-foreground text-primary-foreground border-foreground"
+                    : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                }`}
+              >
+                {cat}
+              </motion.button>
             ))}
           </motion.div>
-        </AnimatePresence>
+        </div>
 
-        {filtered.length === 0 && (
-          <div className="text-center py-24">
-            <p className="font-body text-muted-foreground text-sm">No products found in this category.</p>
-            <button
-              onClick={() => setActiveCategory("All")}
-              className="mt-4 font-body text-[11px] uppercase tracking-[0.2em] font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors"
+        {/* Product Grid */}
+        <div className="section-padding !pt-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeCategory}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className={`grid grid-cols-2 gap-4 md:gap-6 ${
+                gridCols === 3 ? "md:grid-cols-3" : "md:grid-cols-3 lg:grid-cols-4"
+              }`}
             >
-              View all products
-            </button>
-          </div>
-        )}
-      </div>
+              {filtered.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
+              ))}
+            </motion.div>
+          </AnimatePresence>
 
-      <Footer />
-    </div>
+          {filtered.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-24"
+            >
+              <p className="font-body text-muted-foreground text-sm">No products found in this category.</p>
+              <button
+                onClick={() => setActiveCategory("All")}
+                className="mt-4 font-body text-[11px] uppercase tracking-[0.2em] font-medium text-foreground underline underline-offset-4 hover:text-muted-foreground transition-colors"
+              >
+                View all products
+              </button>
+            </motion.div>
+          )}
+        </div>
+
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 
